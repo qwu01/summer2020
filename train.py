@@ -1,5 +1,5 @@
-from Project_A3.data.get_batch import get_batch
-from Project_A3.evaluate import evaluate_model
+from Project_A4.data.get_batch import get_batch
+from Project_A4.evaluate import evaluate_model
 import torch.nn as nn
 import time
 from torch.utils.tensorboard import SummaryWriter
@@ -24,7 +24,7 @@ def train_model(model, train_data, val_data, epochs, criterion, optimizer, sched
 
             input_data, targets = get_batch(train_data, i, bqtt_len)
             optimizer.zero_grad()
-            output_data = model(input_data)
+            output_data, _, _, _ = model(input_data)
 
             loss = criterion(output_data.view(-1, n_tokens), targets.view(-1))
             loss.backward()

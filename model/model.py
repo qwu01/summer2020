@@ -20,7 +20,7 @@ class TransformerModel(nn.Module):
         self.init_weights()
 
     def init_weights(self):
-        init_range = 0.1
+        init_range = 0.05
         self.embedding.weight.data.uniform_(-init_range, init_range)
         self.fc_layer_as_decoder.weight.data.uniform_(-init_range, init_range)
         # self.fc_layer_as_decoder.bias.zero_()
@@ -31,11 +31,11 @@ class TransformerModel(nn.Module):
             mask = (torch.triu(torch.ones(len(src), len(src))) == 1).transpose(0, 1)
             self.data_mask = mask.to(device)
 
-        output = self.embedding(src) * math.sqrt(self.embedding_dim)
-        output = self.pos_encoder(output)
-        output = self.transformer_encoder(output, self.data_mask)
-        output = self.fc_layer_as_decoder(output)
-        return output
+        embedding_output = self.embedding(src) * math.sqrt(self.embedding_dim)
+        positional_encoding_output = self.pos_encoder(embedding_output)
+        transformer_encoder_output = self.transformer_encoder(positional_encoding_output, self.data_mask)
+        fc_as_decoder_output = self.fc_layer_as_decoder(transformer_encoder_output)
+        return fc_as_decoder_output, transformer_encoder_output, positional_encoding_output, embedding_output
 
 
 class PositionalEncoding(nn.Module):

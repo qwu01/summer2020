@@ -1,4 +1,4 @@
-from Project_A3.data.get_batch import get_batch
+from Project_A4.data.get_batch import get_batch
 import torch
 from torch.utils.tensorboard import SummaryWriter
 
@@ -18,7 +18,7 @@ def evaluate_model(model, val_data, epoch, criterion, n_tokens, bqtt_len, writer
     with torch.no_grad():
         for batch, i in enumerate(range(0, val_data.size(0) - 1, bqtt_len)):
             input_data, targets = get_batch(val_data, i, bqtt_len)
-            output_data = model(input_data)
+            output_data, _, _, _ = model(input_data)
             total_loss += len(input_data) * criterion(output_data.view(-1, n_tokens),
                                                       targets.view(-1)).item()
 
